@@ -3,6 +3,7 @@ import json
 import torch
 import argparse
 from tqdm import tqdm
+from vllm import LLM
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
@@ -74,10 +75,9 @@ def get_perplexity_and_embedding_part_text(tokenizer, model, text, target_span, 
 
 
 def main():
-
     args = parse_args()
     print(args)
-
+    
     model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, device_map="auto", cache_dir='../cache', output_hidden_states=True)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, cache_dir='../cache')
 
@@ -104,7 +104,6 @@ def main():
         prompt_input = PROMPT_DICT_NONE["prompt_input"]
 
     for i in tqdm(range(len(sampled_data))):
-
         data_i = sampled_data[i]
         instruct_i = data_i['instruction']
         output_i = data_i['output']
